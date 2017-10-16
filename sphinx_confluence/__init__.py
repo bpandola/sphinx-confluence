@@ -274,6 +274,9 @@ class HTMLConfluenceTranslator(HTMLTranslator):
         if 'caption' in node and node['caption']:
             parts.append('<ac:parameter ac:name="title">%s</ac:parameter>' % node['caption'])
 
+        theme = self.builder.config.confluence_code_block_theme
+        parts.append('<ac:parameter ac:name="theme">%s</ac:parameter>' % theme)
+
         parts.append('<ac:plain-text-body><![CDATA[%s]]></ac:plain-text-body>' % node.rawsource)
         parts.append('</ac:structured-macro>')
 
@@ -562,6 +565,8 @@ def setup(app):
     """
     :type app: sphinx.application.Sphinx
     """
+    app.add_config_value('confluence_code_block_theme', 'Confluence', True)
+
     app.config.html_theme_path = [get_path()]
     app.config.html_theme = 'confluence'
     app.config.html_scaled_image_link = False
