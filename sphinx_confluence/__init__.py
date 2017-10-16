@@ -14,7 +14,6 @@ from docutils.parsers.rst.directives import images
 from docutils.parsers.rst.roles import set_classes
 
 import sphinx
-from sphinx.builders.html import JSONHTMLBuilder
 from sphinx.directives.code import CodeBlock
 from sphinx.locale import _
 from sphinx.writers.html import HTMLTranslator
@@ -46,18 +45,6 @@ class TitlesCache(object):
     @classmethod
     def has_title(cls, document):
         return cls._document_key(document) in cls.titles
-
-
-class JSONConfluenceBuilder(JSONHTMLBuilder):
-    """For backward compatibility"""
-
-    name = 'json_conf'
-
-    def __init__(self, app):
-        super(JSONConfluenceBuilder, self).__init__(app)
-        if LooseVersion(sphinx.__version__) >= LooseVersion("1.4"):
-            self.translator_class = HTMLConfluenceTranslator
-        self.warn('json_conf builder is deprecated and will be removed in future releases')
 
 
 class HTMLConfluenceTranslator(HTMLTranslator):
@@ -586,5 +573,3 @@ def setup(app):
     app.add_directive('toctree', TocTree)
     app.add_directive('jira_issues', JiraIssuesDirective)
     app.add_directive('code-block', CaptionedCodeBlock)
-
-    app.add_builder(JSONConfluenceBuilder)
