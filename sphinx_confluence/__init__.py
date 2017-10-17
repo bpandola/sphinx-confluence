@@ -14,6 +14,7 @@ from docutils.parsers.rst.directives import images
 from docutils.parsers.rst.roles import set_classes
 
 import sphinx
+from sphinx.builders.html import StandaloneHTMLBuilder
 from sphinx.directives.code import CodeBlock
 from sphinx.locale import _
 from sphinx.writers.html import HTMLTranslator
@@ -537,6 +538,29 @@ class CaptionedCodeBlock(CodeBlock):
         return ret
 
 
+class ConfluenceBuilder(StandaloneHTMLBuilder):
+    """
+    Builds modified Confluence Storage/HTML docs.
+    """
+    name = 'confluence'
+    format = 'confluence'
+    out_suffix = '.csfhtml'
+    link_suffix = '.html'  # defaults to matching out_suffix
+    # create links to original images from images [True/False]
+    html_scaled_image_link = False
+
+    # def init(self):
+    #     super(ConfluenceBuilder, self).__init__()
+
+    def get_theme_config(self):
+        # type: () -> Tuple[unicode, Dict]
+        return self.config.html_theme, self.config.html_theme_options
+
+    @property
+    def default_translator_class(self):
+        return HTMLConfluenceTranslator
+
+
 def underscore_to_camelcase(text):
     return ''.join(word.title() if i else word for i, word in enumerate(text.split('_')))
 
@@ -552,15 +576,11 @@ def setup(app):
     """
     :type app: sphinx.application.Sphinx
     """
-    app.add_config_value('confluence_code_block_theme', 'Confluence', True)
-
+    app.add_config_value('confluence_code_block_theme', 'Confluence', 'html')
+    app.add_builder(ConfluenceBuilder)
     app.config.html_theme_path = [get_path()]
     app.config.html_theme = 'confluence'
     app.config.html_scaled_image_link = False
-    if LooseVersion(sphinx.__version__) >= LooseVersion("1.4"):
-        app.set_translator("html", HTMLConfluenceTranslator)
-    else:
-        app.config.html_translator_class = 'sphinx_confluence.HTMLConfluenceTranslator'
     app.config.html_add_permalinks = ''
 
     jira_issue = JiraIssueRole('jira_issue', nodes.Inline)
