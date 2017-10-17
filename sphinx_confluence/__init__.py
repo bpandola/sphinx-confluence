@@ -440,7 +440,7 @@ class TocTree(Directive):
     def run(self):
         macro = """
             <ac:structured-macro ac:name="toc">
-              <ac:parameter ac:name="style">square</ac:parameter>
+              <ac:parameter ac:name="style">disc</ac:parameter>
               <ac:parameter ac:name="minLevel">1</ac:parameter>
               <ac:parameter ac:name="maxLevel">3</ac:parameter>
               <ac:parameter ac:name="type">list</ac:parameter>
