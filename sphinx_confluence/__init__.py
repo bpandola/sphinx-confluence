@@ -5,7 +5,6 @@ https://confluence.atlassian.com/display/DOC/Confluence+Storage+Format
 
 """
 
-from distutils.version import LooseVersion
 import os
 
 from docutils import nodes
@@ -13,7 +12,6 @@ from docutils.parsers.rst import directives, Directive, roles
 from docutils.parsers.rst.directives import images
 from docutils.parsers.rst.roles import set_classes
 
-import sphinx
 from sphinx.builders.html import StandaloneHTMLBuilder
 from sphinx.directives.code import CodeBlock
 from sphinx.locale import _
