@@ -1,0 +1,18 @@
+# This will wrap the standard makefile build target in a Docker container to ensure
+# that all needed Python versions are installed prior to testing.
+
+all: ci
+
+# http://cakoose.com/wiki/gnu_make_thunks
+IMAGE_GEN = $(shell docker create -v /src -w /src toxtests /bin/bash -c "make clean-all; make build")
+IMAGE = $(eval IMAGE := $(IMAGE_GEN))$(IMAGE)
+
+ci: ## CI ##
+ci: tox.ini
+	docker build -t toxtests tests/
+	docker cp . $(IMAGE):/src
+	docker start -a $(IMAGE)
+	docker cp $(IMAGE):src/build .
+	docker rm -f -v $(IMAGE)
+
+.PHONY: all ci
